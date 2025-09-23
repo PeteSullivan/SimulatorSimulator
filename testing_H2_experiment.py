@@ -89,7 +89,7 @@ def Simulate_H2(J, B, c, t_sim, n):
 
 
     #TROTTERIZATION:
-    
+
 
     t_act_x = -J*(1+c)*t_sim/(H_MS_x[1][2]*n*2)
     t_act_y = -J*(1-c)*t_sim/(H_MS_y[1][2]*n*2)

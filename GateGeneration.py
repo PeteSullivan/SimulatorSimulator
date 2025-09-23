@@ -203,6 +203,7 @@ def Ising_interaction(i,j,N, phase):
     Returns:
     qt.Qobj: X on i and j, identity everywhere else.
     """
+
     operators = []
     
     # Identity matrix
@@ -248,6 +249,52 @@ def MS_Hamiltonian(J,N, phase):
           val = 2*np.pi*(J[i][j] * Ising_interaction(i,j,N, phase))
           H.append(val)
     return sum(H)
+
+def Jij_from_weights(mode_frequencies, mode_vectors, NIons, weights):
+    """
+    Calculates the J matrix that dictate ion-ion coupling. Requires the inputs of
+    frequencies to be in Hz.
+  
+    Note: we could modify for in the future to include position calculations.
+  
+    Parameters:
+  
+    Omegas (array): Array of rabi frequencies in Hz.
+    mode_vectors (array): Array of eigenvectors.
+    mode_frequencies (array): Array of eigenvalues.
+    mode_detune (float): The mode being detuned from in Hz. e.g. COM.
+    det (float): Detuning from mode in Hz.
+    recoil (float): Recoil frequency in Hz.
+    num_ions (int): Number of ions.
+  
+    Returns:
+    J (array): The J matrix.
+    """
+    #build J_k matrices from flipped qubits
+    J_ks = []
+    for positive in range(2): #second half of weights are negative
+        for k in range(NIons-1): #different mode vectors
+            for n in range(NIons+1): #flipped qubit
+                J_k = np.zeros([NIons, NIons])
+                for i in range(NIons):
+                    for j in range(NIons):
+                        J_k[i][j] = mode_vectors[k][i] * mode_vectors[k][j]
+                        if i == n-1 or j == n-1:
+                            J_k[i][j] = -J_k[i][j]
+                if positive == 1:
+                    J_k = -J_k
+                print(f"positive? {positive}, mode vector: {k}, flipped: {n}")
+                print_matrix(J_k)
+                J_ks.append(J_k)
+
+    #multiply each by the weights
+    Jij = np.zeros([NIons, NIons])
+    for i in range(2*(NIons-1)*(NIons+1)):
+        Jij += J_ks[i] * weights[i]
+    #output Jij
+    return Jij
+
+
 
 def MS_gate_Unitary(equilibrium_positions, secular_frequencies, NIons, laserset, time):
     """Calculates the Unitary gate operation given trap parameters and a set of lasers"""
@@ -413,4 +460,3 @@ def print_matrix(matrix, precision=3, sci=True):
                 fmt = f"{{0.real:.{precision}f}}{{0.imag:+.{precision}f}}j"
             row_str += fmt.format(z).rjust(24)
         print(row_str)
-

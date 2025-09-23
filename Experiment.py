@@ -12,6 +12,16 @@ class Experiment:
     def set_state(self, state):
         self.state = state
 
+    def _expand_gate(self, gate, qubit):
+        I = np.eye(2)
+        operation = np.array([1])
+        for i in range(self.num_qubits):
+            if i == qubit:
+                operation = np.kron(operation, gate)
+            else:
+                operation = np.kron(operation, I)
+        return operation
+
     def apply_gate(self, gate, qubit):
         """Apply a single-qubit gate to a specific qubit."""
         full_gate = self._expand_gate(gate, qubit)
@@ -20,6 +30,7 @@ class Experiment:
     def apply_global_gate(self, gate):
         """Apply a global state to the whole system"""
         self.state = gate @ self.state
+
 
     def measure(self):
         """Measure the quantum state in the computational basis."""

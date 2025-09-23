@@ -15,14 +15,23 @@ equil_positions = scripts.current_equilibrium_positions()
 print("secular:", secular_frequencies)
 print("equil:", equil_positions)
 mode_frequencies, mode_vectors = gg.eigensystem(equil_positions, secular_frequencies, NIons)
-
+# mode_vectors = np.array([[1, 1, 1, 1], [1, -1, 1, -1], [1, -1, -1, 1], [1, -1, 1, -1]])
+print("mode vectors:", mode_vectors)
 #define a JDes to simulate
+
+pi4 = np.pi / 4
 JDes = np.array([
-    [0, 1, 1, 1],
-    [1, 0, 1, 1],
-    [1, 1, 0, 1],
-    [1, 1, 1, 1]
+    [0, 0.5, 0.5, 0],
+    [0, 0, 0, 0.5],
+    [0, 0, 0, 0.5],
+    [0, 0, 0, 0]
     ])
+# JDes = np.array([
+#     [0, 0, 1],
+#     [0, 0, 1],
+#     [0, 0, 0]
+# ])
+
 
 #find weights to simulate JDes
 weights = scripts.Jij_to_weights(JDes, mode_vectors)
@@ -31,23 +40,31 @@ weights = scripts.Jij_to_weights(JDes, mode_vectors)
 # gg.print_matrix(weights)
 print("weights:", weights)
 
+Jij = gg.Jij_from_weights(mode_frequencies=mode_frequencies, mode_vectors=mode_vectors, NIons=NIons, weights=weights)
+print("Generated Jij:")
+gg.print_matrix(Jij)
 cir = c.Circuit(NIons)
 
-z_rot = c.Circuit.rotation('z', np.pi)
+# z_rot = c.Circuit.rotation('z', np.pi)
 
-Jij_1 = np.array([[1, 1, 1], [1, 1, 1], [1, 1, 1]])
-Jij_2 = np.array([[1, 0, 1], [0, 1, 0], [1, 0, 1]])
-c1 = c.Circuit(3)
-x_rot = c.Circuit.rotation('x', np.pi, 0.05)
-x_ent = c.Circuit.entanglement('x', Jij_1, 0.05)
-y_ent = c.Circuit.entanglement('y', Jij_2, 0.05)
-c1.addOperator(x_rot)
-c1.addOperator(x_ent)
-c1.addOperator(y_ent)
-c1.addOperator(y_ent)
-c1.addOperator(x_rot)
-c1.printCircuit()
+# Jij_1 = np.array([[0, 1, 1],
+#                   [0, 0, 1], 
+#                   [0, 0, 0]])
+# Jij_2 = np.array([[1, 0, 1], [0, 1, 0], [1, 0, 1]])
 
-effective_circuit, fidelity = c1.effective_circuit(secular_frequencies, equil_positions, NIons)
-print("fidelity:", fidelity)
-c1.print_effective_circuit(effective_circuit)
+
+# c1 = c.Circuit(3)
+# x_rot = c.Circuit.rotation('x', np.pi, 0.05)
+# x_ent = c.Circuit.entanglement('x', Jij_1, 0.05)
+# y_ent = c.Circuit.entanglement('y', Jij_2, 0.05)
+# c1.addOperator(x_rot)
+# c1.addOperator(x_ent)
+# c1.addOperator(y_ent)
+# c1.addOperator(y_ent)
+# c1.addOperator(x_rot)
+# c1.printCircuit()
+
+# effective_circuit, fidelity = c1.effective_circuit(secular_frequencies, equil_positions, NIons)
+# print("fidelity:", fidelity)
+# c1.print_effective_circuit(effective_circuit)
+

@@ -54,8 +54,8 @@ def current_secular_frequencies(trapName):
 def Jij_to_weights(JDes, NormalModeEigVecs):
     '''
     returns the weights needed to calculate arbitrary Jij calculations'''
-    mmwrite("TempFiles\\JDes.mtx", JDes) # Export to MTX format
-    mmwrite("TempFiles\\normal_modes.mtx", NormalModeEigVecs)
+    mmwrite("Z:\\Users\\Pete\\SimulatorSimulator\\Simulator\\TempFiles\\JDes.mtx", JDes) # Export to MTX format
+    mmwrite("Z:\\Users\\Pete\\SimulatorSimulator\\Simulator\\TempFiles\\normal_modes.mtx", NormalModeEigVecs)
 
 
     scriptPath = "Z:\\Users\\Pete\\SimulatorSimulator\\Simulator\\MathematicaScripts\\Jij_weights.wl"

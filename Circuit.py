@@ -5,13 +5,13 @@ import InteractionGeneration as intg
 class Circuit:
 
     class rotation:
-        def __init__(self, direction, angle, t):
+        def __init__(self, direction, angle, t=11):
             self.angle = angle
             self.direction = direction
 
 
     class entanglement:
-        def __init__(self, direction, Jij, t):
+        def __init__(self, direction, Jij, t=11):
             self.direction = direction
             self.Jij = Jij
 

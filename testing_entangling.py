@@ -42,6 +42,3 @@ print("Final Hamiltonian: ", np.round(final_Hamiltonian, 3))
 final_Unitary = gg.unitary_evolution(final_Hamiltonian, .01)
 
 print("Final Unitary:", np.round(final_Unitary, 3))
-
-
-
